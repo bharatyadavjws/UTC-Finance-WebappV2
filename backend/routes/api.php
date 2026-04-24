@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\LoanController;
 use App\Http\Controllers\Api\RetailerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\EmiController;
+use App\Http\Controllers\CRM\CommissionController;
 
 // Public routes
 Route::post('/login',  [AuthController::class, 'login']);
@@ -30,4 +33,19 @@ Route::middleware('auth:sanctum')->group(function () {
     // Loans
     Route::get('/loans',  [LoanController::class, 'index']);
     Route::post('/loans', [LoanController::class, 'store']);
+
+    // Agents (UTC Team only)
+    Route::get('/agents',       [AgentController::class, 'index']);
+    Route::post('/agents',      [AgentController::class, 'store']);
+    Route::get('/agents/{user}', [AgentController::class, 'show']);
+
+    // EMI Book
+    Route::get('/emis',                              [EmiController::class, 'index']);
+    Route::patch('/emis/{id}/status',                [EmiController::class, 'updateStatus']);
+    Route::post('/loans/{loanCode}/generate-emis',   [EmiController::class, 'generate']);
+
+    Route::get('/crm/commissions', [CommissionController::class, 'index']);
+    Route::post('/crm/commissions/{id}/mark-paid', [CommissionController::class, 'markPaid']);
+    Route::post('/crm/loans/{id}/disburse', [LoanController::class, 'markAsDisbursed']);
+    Route::get('/crm/loans', [LoanController::class, 'crmIndex']);
 });

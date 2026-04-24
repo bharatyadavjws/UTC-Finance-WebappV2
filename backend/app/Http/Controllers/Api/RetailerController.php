@@ -14,20 +14,25 @@ use Illuminate\Http\Request;
 class RetailerController extends Controller
 {
     public function index(Request $request): JsonResponse
-    {
-        $query = Retailer::query()->latest();
+{
+    $user      = $request->user();
+    $isUtcTeam = $user->role === 'utc_team';
 
-        $agentId = $request->user()->id;
-        $query->where('agent_id', $agentId);
+    $query = Retailer::query()->latest();
 
-        $retailers = $query->get();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Retailers fetched successfully',
-            'data' => RetailerResource::collection($retailers),
-        ], 200);
+    // UTC Team sees ALL retailers, agents see only their own
+    if (!$isUtcTeam) {
+        $query->where('agent_id', $user->id);
     }
+
+    $retailers = $query->get();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Retailers fetched successfully',
+        'data'    => RetailerResource::collection($retailers),
+    ], 200);
+}
 
     public function store(StoreRetailerRequest $request): JsonResponse
     {

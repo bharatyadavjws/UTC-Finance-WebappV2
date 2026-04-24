@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Loan;
 use App\Models\Retailer;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,24 +13,29 @@ class DashboardController extends Controller
 {
     public function getStats(Request $request): JsonResponse
     {
-        $agentId = $request->user()->id;
+        $user = $request->user();
+        $isUtcTeam = $user->role === 'utc_team';
 
-        // Count total retailers onboarded by this agent
-        $totalRetailers = Retailer::where('agent_id', $agentId)->count();
+        // UTC Team sees ALL data globally, agents see only their own
+        $loansQuery    = $isUtcTeam ? Loan::query()     : Loan::where('agent_id', $user->id);
+        $retailerQuery = $isUtcTeam ? Retailer::query() : Retailer::where('agent_id', $user->id);
 
-        // Loan stats
-        $loans = Loan::where('agent_id', $agentId)->get();
-        
-        $totalLoans = $loans->count();
-        $pendingLoans = $loans->where('status', 'Pending')->count();
-        $activeLoans = $loans->where('status', 'Active')->count();
-        
-        // Sum of all net disbursements for active/approved loans
-        $totalDisbursed = $loans->whereIn('status', ['Active', 'Approved'])
-                               ->sum('net_disbursement');
+        $loans = $loansQuery->get();
 
-        // Get 5 most recent loan applications
-        $recentLoans = Loan::where('agent_id', $agentId)
+        $stats = [
+            'total_retailers' => $retailerQuery->count(),
+            'total_loans'     => $loans->count(),
+            'pending_loans'   => $loans->where('status', 'Pending')->count(),
+            'active_loans'    => $loans->where('status', 'Active')->count(),
+            'total_disbursed' => (float) $loans->whereIn('status', ['Active', 'Approved'])->sum('net_disbursement'),
+        ];
+
+        // UTC Team gets extra global stats
+        if ($isUtcTeam) {
+            $stats['total_agents'] = User::where('role', 'agent')->count();
+        }
+
+        $recentLoans = (clone $loansQuery)
             ->latest()
             ->limit(5)
             ->get(['loan_code', 'customer_name', 'status', 'created_at', 'emi_amount']);
@@ -37,14 +43,8 @@ class DashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'stats' => [
-                    'total_retailers' => $totalRetailers,
-                    'total_loans'     => $totalLoans,
-                    'pending_loans'   => $pendingLoans,
-                    'active_loans'    => $activeLoans,
-                    'total_disbursed' => (float) $totalDisbursed,
-                ],
-                'recent_loans' => $recentLoans
+                'stats'        => $stats,
+                'recent_loans' => $recentLoans,
             ]
         ]);
     }

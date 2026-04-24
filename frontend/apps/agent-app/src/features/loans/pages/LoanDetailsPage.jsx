@@ -38,33 +38,11 @@ export default function LoanDetailsPage() {
 
   const cardStyle = { background: '#fff', padding: '20px', borderRadius: '16px', border: '1px solid #e5e7eb', marginBottom: '16px' };
   const sectionTitle = { fontSize: '18px', fontWeight: '700', marginBottom: '12px', color: '#111827' };
-  const primaryButtonStyle = {
-    background: '#1a73e8',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '10px',
-    padding: '12px 16px',
-    cursor: 'pointer',
-    fontWeight: '700',
-    fontSize: '15px',
-    transition: 'background 0.2s',
-  };
-  
-  const secondaryButtonStyle = {
-    background: '#fff',
-    color: '#111827',
-    border: '1px solid #d1d5db',
-    borderRadius: '10px',
-    padding: '12px 16px',
-    cursor: 'pointer',
-    fontWeight: '700',
-    fontSize: '15px',
-  };
-  
+
   return (
     <div style={{ padding: '100px 16px 120px', background: '#f5f7fb', minHeight: '100vh' }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
           <button onClick={() => navigate('/loans')} style={{ border: 'none', background: 'none', fontSize: '20px', cursor: 'pointer' }}>←</button>
           <h1 style={{ fontSize: '24px', fontWeight: '800' }}>Loan Details</h1>
@@ -86,14 +64,14 @@ export default function LoanDetailsPage() {
           <InfoRow label="Aadhaar" value={loan.aadhar_number} />
         </div>
 
-        {/* Device & Loan Summary */}
+        {/* Finance Summary — Loan Amount replaced with Disbursed Amount */}
         <div style={cardStyle}>
           <h2 style={sectionTitle}>Finance Summary</h2>
           <InfoRow label="Item" value={loan.item_name} />
-          <InfoRow label="Item Value" value={`₹${loan.item_value}`} />
-          <InfoRow label="Downpayment" value={`₹${loan.down_payment}`} />
-          <InfoRow label="Loan Amount" value={`₹${loan.loan_amount}`} />
-          <InfoRow label="Monthly EMI" value={`₹${loan.emi_amount}`} />
+          <InfoRow label="Item Value" value={`₹${Number(loan.item_value).toLocaleString('en-IN')}`} />
+          <InfoRow label="Down Payment" value={`₹${Number(loan.down_payment).toLocaleString('en-IN')}`} />
+          <InfoRow label="Disbursed Amount" value={`₹${Number(loan.net_disbursement).toLocaleString('en-IN')}`} />
+          <InfoRow label="Monthly EMI" value={`₹${Number(loan.emi_amount).toLocaleString('en-IN')}`} />
           <InfoRow label="Tenure" value={`${loan.plan_months} Months`} />
         </div>
 
@@ -103,12 +81,14 @@ export default function LoanDetailsPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             {['customer_photo', 'aadhar_front', 'aadhar_back', 'pan_photo', 'item_photo'].map(field => (
               <div key={field} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '4px', textTransform: 'capitalize' }}>{field.replace('_', ' ')}</div>
+                <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '4px', textTransform: 'capitalize' }}>
+                  {field.replace(/_/g, ' ')}
+                </div>
                 <div style={{ height: '80px', background: '#f3f4f6', borderRadius: '8px', overflow: 'hidden' }}>
                   {loan[field] ? (
-                    <img src={`http://127.0.0.1:8000/storage/${loan[field]}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={`http://127.0.0.1:8000/storage/${loan[field]}`} alt={field} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <span style={{ fontSize: '10px', color: '#9ca3af', lineHeight: '80px' }}>N/A</span>
+                    <span style={{ fontSize: '10px', color: '#9ca3af', lineHeight: '80px', display: 'block' }}>N/A</span>
                   )}
                 </div>
               </div>
@@ -116,9 +96,19 @@ export default function LoanDetailsPage() {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={() => window.alert('Re-downloading PDF Agreement...')}
-          style={{ ...primaryButtonStyle, width: '100%', background: '#0f9d58', padding: '16px' }}
+          style={{
+            width: '100%',
+            padding: '16px',
+            background: '#0f9d58',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontWeight: '700',
+            fontSize: '15px',
+          }}
         >
           Download Agreement (PDF)
         </button>

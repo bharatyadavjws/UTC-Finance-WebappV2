@@ -96,4 +96,9 @@ class Loan extends Model
 
         return $code;
     }
+
+    public function emiSchedules()
+{
+    return $this->hasMany(EmiSchedule::class, 'loan_code', 'loan_code');
+}
 }
