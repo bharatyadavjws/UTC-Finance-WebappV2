@@ -66,8 +66,8 @@ function LoanListPage() {
     return {
       total: loans.length,
       pending: loans.filter((item) => String(item.status || '').toLowerCase() === 'pending').length,
-      approved: loans.filter((item) => String(item.status || '').toLowerCase() === 'approved').length,
-      active: loans.filter((item) => String(item.status || '').toLowerCase() === 'active').length,
+      disbursed: loans.filter((item) => String(item.status || '').toLowerCase() === 'disbursed').length,
+      closed:    loans.filter((item) => String(item.status || '').toLowerCase() === 'closed').length,
     }
   }, [loans])
 
@@ -92,12 +92,12 @@ function LoanListPage() {
           <strong className="crm-card__value">{summary.pending}</strong>
         </div>
         <div className="loan-summary-item">
-          <span className="crm-card__label">Approved</span>
-          <strong className="crm-card__value">{summary.approved}</strong>
+          <span className="crm-card__label">Disbursed</span>
+          <strong className="crm-card__value">{summary.disbursed}</strong>
         </div>
         <div className="loan-summary-item">
-          <span className="crm-card__label">Active</span>
-          <strong className="crm-card__value">{summary.active}</strong>
+          <span className="crm-card__label">Closed</span>
+          <strong className="crm-card__value">{summary.closed}</strong>
         </div>
       </div>
 
@@ -123,9 +123,7 @@ function LoanListPage() {
             >
               <option value="ALL">All Statuses</option>
               <option value="Pending">Pending</option>
-              <option value="Approved">Approved</option>
-              <option value="Active">Active</option>
-              <option value="Rejected">Rejected</option>
+              <option value="Disbursed">Disbursed</option>
               <option value="Closed">Closed</option>
             </select>
           </div>
@@ -188,10 +186,8 @@ function formatMoney(value) {
 
 function getStatusClass(status) {
   const value = String(status || '').toLowerCase()
-
-  if (value === 'approved' || value === 'active') return 'status-pill--approved'
   if (value === 'disbursed') return 'status-pill--disbursed'
-  if (value === 'rejected') return 'status-pill--rejected'
+  if (value === 'closed')    return 'status-pill--closed'
   return 'status-pill--pending'
 }
 

@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { loanService } from '../../../services/loanService';
 
 const statusColors = {
-    active:    'bg-blue-100 text-blue-700',
-    disbursed: 'bg-purple-100 text-purple-700',
-    overdue:   'bg-red-100 text-red-700',
-    completed: 'bg-green-100 text-green-700',
-  };
+  pending:   'bg-yellow-100 text-yellow-700',
+  disbursed: 'bg-blue-100 text-blue-700',
+  closed:    'bg-green-100 text-green-700',
+};
 
 export default function InvestorDashboardPage() {
   const [stats, setStats]   = useState(null);
@@ -21,10 +20,9 @@ export default function InvestorDashboardPage() {
 
         const totalDeployed   = all.reduce((s, l) => s + parseFloat(l.loan_amount || 0), 0);
         const totalRepaid     = all.reduce((s, l) => s + parseFloat(l.total_repaid  || 0), 0);
-        const activeLoans = all.filter(l => l.status?.toLowerCase() === 'active' || l.status?.toLowerCase() === 'disbursed').length;
-        const overdueLoans = all.filter(l => l.status?.toLowerCase() === 'overdue').length;
-        const completedLoans = all.filter(l => l.status?.toLowerCase() === 'completed').length;
-
+        const disbursedLoans = all.filter(l => l.status?.toLowerCase() === 'disbursed').length;
+        const closedLoans    = all.filter(l => l.status?.toLowerCase() === 'closed').length;
+        setStats({ totalDeployed, totalRepaid, disbursedLoans, closedLoans, total: all.length });
         setStats({ totalDeployed, totalRepaid, activeLoans, overdueLoans, completedLoans, total: all.length });
         setLoans(all);
       } catch (err) {
@@ -48,9 +46,8 @@ export default function InvestorDashboardPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <StatCard label="Total Deployed" value={`₹${stats.totalDeployed.toLocaleString('en-IN')}`} color="border-blue-500" />
           <StatCard label="Total Repaid"   value={`₹${stats.totalRepaid.toLocaleString('en-IN')}`}   color="border-green-500" />
-          <StatCard label="Active Loans"   value={stats.activeLoans}    color="border-purple-500" />
-          <StatCard label="Overdue Loans"  value={stats.overdueLoans}   color="border-red-500" />
-          <StatCard label="Completed"      value={stats.completedLoans} color="border-gray-400" />
+          <StatCard label="Disbursed Loans" value={stats.disbursedLoans} color="border-blue-500" />
+          <StatCard label="Closed Loans"    value={stats.closedLoans}    color="border-green-500" />        
         </div>
       )}
 

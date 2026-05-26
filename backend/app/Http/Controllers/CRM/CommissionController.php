@@ -9,25 +9,25 @@ use Illuminate\Http\Request;
 class CommissionController extends Controller
 {
     public function index()
-    {
-        $loans = Loan::with(['agent.user', 'retailer'])
-            ->whereIn('status', ['disbursed', 'active', 'completed', 'overdue'])
-            ->get()
-            ->map(function ($loan) {
-                return [
-                    'id'                => $loan->id,
-                    'loan_number'       => $loan->loan_number,
-                    'agent_name'        => optional(optional($loan->agent)->user)->name,
-                    'retailer_name'     => optional($loan->retailer)->shop_name,
-                    'loan_amount'       => $loan->loan_amount,
-                    'commission_amount' => $loan->commission_amount,
-                    'commission_status' => $loan->commission_status,
-                    'disbursed_at'      => $loan->disbursed_at,
-                ];
-            });
+{
+    $loans = Loan::with(['agent', 'retailer'])
+        ->whereIn('commission_status', ['pending_payout', 'paid'])
+        ->get()
+        ->map(function ($loan) {
+            return [
+                'id'                => $loan->id,
+                'loan_number'       => $loan->loan_code,
+                'agent_name'        => optional($loan->agent)->name,
+                'retailer_name'     => optional($loan->retailer)->shop_name,
+                'loan_amount'       => $loan->loan_amount,
+                'commission_amount' => $loan->commission_amount,
+                'commission_status' => $loan->commission_status,
+                'disbursed_at'      => $loan->disbursed_at,
+            ];
+        });
 
-        return response()->json(['data' => $loans]);
-    }
+    return response()->json(['data' => ['data' => $loans]]);
+}
 
     public function markPaid($id)
     {

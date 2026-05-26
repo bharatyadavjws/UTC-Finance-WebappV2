@@ -22,3 +22,5 @@ storage/*.key
 public/storage
 
 
+CREDENTIALS.md
+*.zip

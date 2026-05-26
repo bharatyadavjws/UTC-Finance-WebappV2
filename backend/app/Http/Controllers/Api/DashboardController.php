@@ -25,9 +25,9 @@ class DashboardController extends Controller
         $stats = [
             'total_retailers' => $retailerQuery->count(),
             'total_loans'     => $loans->count(),
-            'pending_loans'   => $loans->where('status', 'Pending')->count(),
-            'active_loans'    => $loans->where('status', 'Active')->count(),
-            'total_disbursed' => (float) $loans->whereIn('status', ['Active', 'Approved'])->sum('net_disbursement'),
+            'pending_loans'    => $loans->where('status', 'Pending')->count(),
+            'disbursed_loans'  => $loans->where('status', 'Disbursed')->count(),
+            'closed_loans'     => $loans->where('status', 'Closed')->count(),
         ];
 
         // UTC Team gets extra global stats

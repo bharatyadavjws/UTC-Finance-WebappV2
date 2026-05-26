@@ -21,9 +21,9 @@ function apiFetch(path, options = {}) {
 }
 
 const STATUS_FLOW = {
-  Pending:    { next: 'Disbursed', label: 'Mark Disbursed', bg: '#dbeafe', color: '#1e40af' },
-  Disbursed:  { next: 'Active',    label: 'Mark Active',    bg: '#d1fae5', color: '#065f46' },
-  Active:     { next: null,        label: null,             bg: null,      color: null       },
+  Pending:   { next: 'Disbursed', label: 'Mark Disbursed', bg: '#e3f2fd', color: '#1a73e8' },
+  Disbursed: { next: 'Closed',    label: 'Mark Closed',    bg: '#e8f5e9', color: '#1b5e20' },
+  Closed:    { next: null,        label: null,             bg: null,      color: null       },
 };
 
 export default function DisbursementPage() {
@@ -55,7 +55,7 @@ export default function DisbursementPage() {
   // Only show loans relevant to disbursement workflow
   const disbursementLoans = useMemo(() => {
     return loans.filter(l =>
-      ['Pending', 'Disbursed', 'Active'].includes(l.status)
+      ['Pending', 'Disbursed', 'Closed'].includes(l.status)
     );
   }, [loans]);
 
@@ -79,7 +79,7 @@ export default function DisbursementPage() {
   const summary = useMemo(() => ({
     pending:   disbursementLoans.filter(l => l.status === 'Pending').length,
     disbursed: disbursementLoans.filter(l => l.status === 'Disbursed').length,
-    active:    disbursementLoans.filter(l => l.status === 'Active').length,
+    closed:    disbursementLoans.filter(l => l.status === 'Closed').length,
     total_pending_amount: disbursementLoans
       .filter(l => l.status === 'Pending')
       .reduce((s, l) => s + Number(l.net_disbursement ?? l.loan_amount ?? 0), 0),
@@ -147,14 +147,13 @@ export default function DisbursementPage() {
           onClick={() => setStatus('Disbursed')}
           active={statusFilter === 'Disbursed'}
         />
-        <SummaryCard
-          label="Active"
-          value={summary.active}
-          color="#10b981"
-          sub="Fully active loans"
-          onClick={() => setStatus('Active')}
-          active={statusFilter === 'Active'}
-        />
+        <SummaryCard 
+        label="Closed" 
+        value={summary.closed} 
+        color="#1b5e20"
+        sub="Fully closed loans" 
+        onClick={() => setStatus('Closed')} 
+        active={statusFilter === 'Closed'} />
       </div>
 
       {/* Filters */}
@@ -181,7 +180,7 @@ export default function DisbursementPage() {
             <option value="ALL">All</option>
             <option value="Pending">Pending</option>
             <option value="Disbursed">Disbursed</option>
-            <option value="Active">Active</option>
+            <option value="Closed">Closed</option>
           </select>
         </div>
       </div>
@@ -286,11 +285,9 @@ function SummaryCard({ label, value, color, sub, onClick, active }) {
 
 function StatusPill({ status }) {
   const map = {
-    Pending:   { bg: '#fef3c7', color: '#92400e' },
-    Disbursed: { bg: '#dbeafe', color: '#1e40af' },
-    Active:    { bg: '#d1fae5', color: '#065f46' },
-    Rejected:  { bg: '#fee2e2', color: '#991b1b' },
-    Closed:    { bg: '#f1f5f9', color: '#475569' },
+    Pending:   { bg: '#fff8e1', color: '#f57f17' },
+    Disbursed: { bg: '#e3f2fd', color: '#1a73e8' },
+    Closed:    { bg: '#e8f5e9', color: '#1b5e20' },
   };
   const s = map[status] ?? { bg: '#f1f5f9', color: '#475569' };
   return (

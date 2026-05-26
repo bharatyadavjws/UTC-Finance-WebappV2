@@ -61,12 +61,14 @@ export default function DashboardPage() {
 
         {error && <div style={{ color: 'red', marginBottom: '16px' }}>{error}</div>}
 
+        {/* Retailers - full width */}
+        <div style={{ ...cardStyle, marginBottom: '12px' }}>
+          <div style={labelStyle}>Retailers</div>
+          <div style={valueStyle}>{stats.total_retailers}</div>
+        </div>
+
         {/* Stats Grid — 4 KPIs only */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '28px' }}>
-          <div style={cardStyle}>
-            <div style={labelStyle}>Retailers</div>
-            <div style={valueStyle}>{stats.total_retailers}</div>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '28px' }}>
           <div style={cardStyle}>
             <div style={labelStyle}>Total Loans</div>
             <div style={valueStyle}>{stats.total_loans}</div>
@@ -76,8 +78,12 @@ export default function DashboardPage() {
             <div style={{ ...valueStyle, color: '#f57f17' }}>{stats.pending_loans}</div>
           </div>
           <div style={cardStyle}>
-            <div style={labelStyle}>Active</div>
-            <div style={{ ...valueStyle, color: '#1b5e20' }}>{stats.active_loans}</div>
+            <div style={labelStyle}>Disbursed</div>
+            <div style={{ ...valueStyle, color: '#1a73e8' }}>{stats.disbursed_loans}</div>
+          </div>
+          <div style={cardStyle}>
+            <div style={labelStyle}>Closed</div>
+            <div style={{ ...valueStyle, color: '#1b5e20' }}>{stats.closed_loans}</div>
           </div>
         </div>
 

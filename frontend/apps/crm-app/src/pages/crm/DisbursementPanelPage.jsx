@@ -37,13 +37,13 @@ export default function DisbursementPanelPage() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Disbursement Panel</h1>
-      <p className="text-gray-500 text-sm mb-6">Approved loans ready for disbursement</p>
+      <p className="text-gray-500 text-sm mb-6">Pending loans ready for disbursement</p>
 
       <div className="bg-white rounded-xl shadow overflow-hidden">
         {loading ? (
           <div className="p-10 text-center text-gray-400">Loading...</div>
         ) : loans.length === 0 ? (
-          <div className="p-10 text-center text-gray-400">No approved loans pending disbursement.</div>
+          <div className="p-10 text-center text-gray-400">No pending loans found.</div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 uppercase text-xs">

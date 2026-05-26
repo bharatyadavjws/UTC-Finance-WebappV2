@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { loanService } from '../../../services/loanService';
 
-const STATUSES = ['Pending', 'Approved', 'Active', 'Rejected', 'Cancelled', 'Closed', 'Blocked'];
+const STATUSES = ['Pending', 'Disbursed', 'Closed'];
 
 export default function LoanDetailPage() {
   const { loanCode } = useParams();
@@ -153,13 +153,9 @@ function Row({ label, value }) {
 
 function StatusPill({ status }) {
   const map = {
-    pending:   { bg: '#fef3c7', color: '#92400e' },
-    approved:  { bg: '#d1fae5', color: '#065f46' },
-    active:    { bg: '#dbeafe', color: '#1e40af' },
-    rejected:  { bg: '#fee2e2', color: '#991b1b' },
-    closed:    { bg: '#f1f5f9', color: '#475569' },
-    cancelled: { bg: '#f1f5f9', color: '#475569' },
-    blocked:   { bg: '#fee2e2', color: '#991b1b' },
+    pending:   { bg: '#fff8e1', color: '#f57f17' },
+    disbursed: { bg: '#e3f2fd', color: '#1a73e8' },
+    closed:    { bg: '#e8f5e9', color: '#1b5e20' },
   };
   const s = map[(status ?? '').toLowerCase()] ?? { bg: '#f1f5f9', color: '#475569' };
   return (

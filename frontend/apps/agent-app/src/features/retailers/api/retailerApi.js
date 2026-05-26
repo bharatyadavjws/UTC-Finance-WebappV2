@@ -3,13 +3,7 @@ import { mapRetailerFromApi, mapRetailerToApi } from './retailerAdapter'
 
 export async function fetchRetailerListApi() {
   const response = await apiClient.get(ENDPOINTS.RETAILERS.LIST)
-
-  const items = Array.isArray(response?.data)
-    ? response.data
-    : Array.isArray(response)
-    ? response
-    : []
-
+  const items = Array.isArray(response?.data) ? response.data : Array.isArray(response) ? response : []
   return items.map(mapRetailerFromApi)
 }
 

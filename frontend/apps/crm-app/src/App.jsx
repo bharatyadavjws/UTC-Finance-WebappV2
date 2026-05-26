@@ -17,7 +17,7 @@ import DisbursementPanelPage from "./pages/crm/DisbursementPanelPage";
 import InvestorDashboardPage from './features/dashboard/pages/InvestorDashboardPage';
 
 // inside protected routes:
-<Route path="/disbursements" element={<DisbursementPage />} />
+{/* <Route path="/disbursements" element={<DisbursementPage />} /> */}
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -42,7 +42,7 @@ export default function App() {
             <Route path="/users" element={<UserListPage />} />
             <Route path="/loans/:loanCode" element={<LoanDetailPage />} />
             <Route path="/emis" element={<EmiBookPage />} />
-            {/* <Route path="/disbursements" element={<DisbursementPage />} /> */}
+            <Route path="/disbursements" element={<DisbursementPage />} />
             <Route path="/crm/commissions" element={<CommissionTrackerPage />} />
             <Route path="/crm/disbursement" element={<DisbursementPanelPage />} />
             <Route path="/investor" element={<InvestorDashboardPage />} />

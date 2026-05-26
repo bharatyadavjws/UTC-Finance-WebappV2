@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Retailer extends Model
 {
     protected $fillable = [
         'retailer_code',
-        'agent_id',
         'shop_name',
         'owner_name',
         'mobile',
@@ -23,15 +21,15 @@ class Retailer extends Model
         'state',
         'pincode',
         'status',
+        // agent_id removed — now handled via pivot
     ];
 
-    public function agent(): BelongsTo
+    /**
+     * Agents assigned to this retailer (many-to-many)
+     */
+    public function agents()
     {
-        return $this->belongsTo(User::class, 'agent_id');
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'retailer_code';
+        return $this->belongsToMany(User::class, 'retailer_agent', 'retailer_id', 'agent_id')
+                    ->withTimestamps();
     }
 }

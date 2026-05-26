@@ -7,9 +7,9 @@ import LoginPage from './features/auth/pages/LoginPage'
 import UnauthorizedPage from './features/auth/pages/UnauthorizedPage'
 import DashboardPage from './features/dashboard/pages/DashboardPage'
 import RetailerListPage from './features/retailers/pages/RetailerListPage'
-import AddRetailerPage from './features/retailers/pages/AddRetailerPage'
+// import AddRetailerPage from './features/retailers/pages/AddRetailerPage'
 import RetailerDetailsPage from './features/retailers/pages/RetailerDetailsPage'
-import EditRetailerPage from './features/retailers/pages/EditRetailerPage'
+// import EditRetailerPage from './features/retailers/pages/EditRetailerPage'
 import LoanListPage from './features/loans/pages/LoanListPage'
 import EmiCalculatorPage from './features/emi-calculator/pages/EmiCalculatorPage'
 import LoanCreatePage from './features/loans/pages/LoanCreatePage'
@@ -39,9 +39,9 @@ function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="retailers" element={<RetailerListPage />} />
-        <Route path="retailers/new" element={<AddRetailerPage />} />
+        {/* <Route path="retailers/new" element={<AddRetailerPage />} /> */}
         <Route path="retailers/:retailerId" element={<RetailerDetailsPage />} />
-        <Route path="retailers/:retailerId/edit" element={<EditRetailerPage />} />
+        {/* <Route path="retailers/:retailerId/edit" element={<EditRetailerPage />} /> */}
         <Route path="loans" element={<LoanListPage />} />
         <Route path="loans/create" element={<LoanCreatePage />} />
         <Route path="emi-calculator" element={<EmiCalculatorPage />} />

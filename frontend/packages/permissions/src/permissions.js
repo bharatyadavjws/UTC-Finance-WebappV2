@@ -2,17 +2,17 @@ import { ROLES } from './roles'
 
 export const PERMISSIONS = {
   VIEW_AGENT_DASHBOARD: 'view_agent_dashboard',
-  VIEW_OWN_RETAILERS: 'view_own_retailers',
-  CREATE_RETAILER: 'create_retailer',
-  VIEW_OWN_LOANS: 'view_own_loans',
-  CREATE_LOAN: 'create_loan',
-  USE_EMI_CALCULATOR: 'use_emi_calculator',
+  VIEW_OWN_RETAILERS:   'view_own_retailers',
+  CREATE_RETAILER:      'create_retailer',
+  VIEW_OWN_LOANS:       'view_own_loans',
+  CREATE_LOAN:          'create_loan',
+  USE_EMI_CALCULATOR:   'use_emi_calculator',
 
-  VIEW_CRM_DASHBOARD: 'view_crm_dashboard',
-  VIEW_ALL_RETAILERS: 'view_all_retailers',
-  VIEW_ALL_LOANS: 'view_all_loans',
-  VIEW_USERS: 'view_users',
-  MANAGE_USERS: 'manage_users',
+  VIEW_CRM_DASHBOARD:      'view_crm_dashboard',
+  VIEW_ALL_RETAILERS:      'view_all_retailers',
+  VIEW_ALL_LOANS:          'view_all_loans',
+  VIEW_USERS:              'view_users',
+  MANAGE_USERS:            'manage_users',
   VIEW_INVESTOR_DASHBOARD: 'view_investor_dashboard',
 }
 
@@ -23,7 +23,16 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.CREATE_RETAILER,
     PERMISSIONS.VIEW_OWN_LOANS,
     PERMISSIONS.CREATE_LOAN,
-    PERMISSIONS.USE_EMI_CALCULATOR,
+    // ❌ USE_EMI_CALCULATOR removed — agents cannot access EMI tab
+  ],
+
+  [ROLES.SUPER_AGENT]: [
+    PERMISSIONS.VIEW_AGENT_DASHBOARD,
+    PERMISSIONS.VIEW_OWN_RETAILERS,
+    PERMISSIONS.CREATE_RETAILER,
+    PERMISSIONS.VIEW_OWN_LOANS,
+    PERMISSIONS.CREATE_LOAN,
+    PERMISSIONS.USE_EMI_CALCULATOR, // ✅ only super_agent gets this
   ],
 
   [ROLES.UTC_TEAM]: [

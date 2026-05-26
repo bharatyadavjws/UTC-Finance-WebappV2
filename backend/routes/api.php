@@ -24,12 +24,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Retailers
-    Route::get('/retailers',                        [RetailerController::class, 'index']);
-    Route::post('/retailers',                       [RetailerController::class, 'store']);
-    Route::get('/retailers/{retailer}',             [RetailerController::class, 'show']);
-    Route::put('/retailers/{retailer}',             [RetailerController::class, 'update']);
-    Route::patch('/retailers/{retailer}/status',    [RetailerController::class, 'updateStatus']);
-
+    Route::get('/retailers',                              [RetailerController::class, 'index']);
+    Route::post('/retailers',                             [RetailerController::class, 'store']);
+    Route::get('/retailers/{retailer}',                   [RetailerController::class, 'show']);
+    Route::put('/retailers/{retailer}',                   [RetailerController::class, 'update']);
+    Route::patch('/retailers/{retailer}/status',          [RetailerController::class, 'updateStatus']);
+    Route::post('/retailers/{retailer}/assign',           [RetailerController::class, 'assign']);
+    Route::delete('/retailers/{retailer}/assign/{agent}', [RetailerController::class, 'unassign']);
+        
     // Loans
     Route::get('/loans',  [LoanController::class, 'index']);
     Route::post('/loans', [LoanController::class, 'store']);

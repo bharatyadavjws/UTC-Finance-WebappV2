@@ -90,10 +90,11 @@ export default function UserListPage() {
               <tr style={{ background: '#f8fafc' }}>
                 <Th>Name</Th>
                 <Th>Email</Th>
+                <Th>Role</Th>
                 <Th>Retailers</Th>
                 <Th>Total Loans</Th>
                 <Th>Pending</Th>
-                <Th>Active</Th>
+                <Th>Disbursed</Th>
                 <Th>Joined</Th>
                 <Th>Action</Th>
               </tr>
@@ -106,10 +107,22 @@ export default function UserListPage() {
                   <tr key={a.id} style={trow}>
                     <td style={{ ...td, fontWeight: '600' }}>{a.name}</td>
                     <td style={{ ...td, color: '#64748b' }}>{a.email}</td>
+                    <td style={td}>
+                      <span style={{
+                        background: a.role === 'super_agent' ? '#ede9fe' : '#f1f5f9',
+                        color: a.role === 'super_agent' ? '#6d28d9' : '#475569',
+                        padding: '3px 10px',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                      }}>
+                        {a.role === 'super_agent' ? 'Super Agent' : 'Agent'}
+                      </span>
+                    </td>
                     <td style={td}>{a.total_retailers ?? 0}</td>
                     <td style={td}>{a.total_loans ?? 0}</td>
                     <td style={td}><span style={pendingPill}>{a.pending_loans ?? 0}</span></td>
-                    <td style={td}><span style={activePill}>{a.active_loans ?? 0}</span></td>
+                    <td style={td}><span style={activePill}>{a.disbursed_loans ?? 0}</span></td>
                     <td style={{ ...td, color: '#94a3b8', fontSize: '13px' }}>{a.joined_at ?? '—'}</td>
                     <td style={td}>
                       <button onClick={() => setSelected(a)} style={viewBtn}>View</button>
@@ -159,6 +172,19 @@ function AgentDrawer({ agent, onClose }) {
           <div>
             <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '800' }}>{agent.name}</h2>
             <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#94a3b8' }}>{agent.email}</p>
+            
+            <p style={{ margin: '2px 0 0', fontSize: '12px' }}>
+              <span style={{
+                background: agent.role === 'super_agent' ? '#ede9fe' : '#f1f5f9',
+                color: agent.role === 'super_agent' ? '#6d28d9' : '#475569',
+                padding: '2px 10px',
+                borderRadius: '20px',
+                fontSize: '11px',
+                fontWeight: '700',
+              }}>
+                {agent.role === 'super_agent' ? 'Super Agent' : 'Agent'}
+              </span>
+            </p>
           </div>
           <button onClick={onClose} style={closeBtn}>✕</button>
         </div>
@@ -217,7 +243,7 @@ function AgentDrawer({ agent, onClose }) {
 
 // ── Add Agent Modal ────────────────────────────────────────────
 function AddAgentModal({ onClose, onCreated }) {
-  const [form, setForm]       = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', agent_role: 'agent' });
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
 
@@ -279,6 +305,17 @@ function AddAgentModal({ onClose, onCreated }) {
               required
             />
           </div>
+          <div>
+            <label style={labelStyle}>Agent Role</label>
+            <select
+              style={inputStyle}
+              value={form.agent_role}
+              onChange={e => set('agent_role', e.target.value)}
+            >
+              <option value="agent">Agent</option>
+              <option value="super_agent">Super Agent</option>
+            </select>
+          </div>
 
           {error && <p style={{ color: '#ef4444', fontSize: '13px', margin: 0 }}>{error}</p>}
 
@@ -323,10 +360,10 @@ function DrawerSection({ title, children }) {
 }
 
 function StatusPill({ status }) {
-  const active = status === 'Active' || status === 'active';
-  const pending = status === 'Pending' || status === 'pending';
-  const bg    = active ? '#d1fae5' : pending ? '#fef3c7' : '#f1f5f9';
-  const color = active ? '#065f46' : pending ? '#92400e' : '#475569';
+  const disbursed = status?.toLowerCase() === 'disbursed';
+  const pending   = status?.toLowerCase() === 'pending';
+  const bg    = disbursed ? '#e3f2fd' : pending ? '#fff8e1' : '#e8f5e9';
+  const color = disbursed ? '#1a73e8' : pending ? '#f57f17' : '#1b5e20';
   return (
     <span style={{ background: bg, color, padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: '600' }}>
       {status ?? '—'}

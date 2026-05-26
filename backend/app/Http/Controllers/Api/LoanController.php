@@ -82,31 +82,43 @@ class LoanController extends Controller
     }
 
     public function updateStatus(Request $request, string $loanCode): JsonResponse
-    {
-        $request->validate([
-            'status' => 'required|string|in:Pending,Approved,Disbursed,Active,Rejected,Cancelled,Closed,Blocked'
-        ]);
+{
+    $request->validate([
+        'status' => 'required|string|in:Pending,Disbursed,Closed'
+    ]);
 
-        $loan = Loan::where('loan_code', $loanCode)->first();
+    $loan = Loan::where('loan_code', $loanCode)->first();
 
-        if (!$loan) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Loan not found'
-            ], 404);
-        }
-
-        $loan->update(['status' => $request->status]);
-
+    if (!$loan) {
         return response()->json([
-            'success' => true,
-            'message' => "Loan status updated to {$request->status}",
-            'data'    => [
-                'loan_code' => $loan->loan_code,
-                'status'    => $loan->status,
-            ]
-        ]);
+            'success' => false,
+            'message' => 'Loan not found'
+        ], 404);
     }
+
+    $loan->status = $request->status;
+
+    // Auto-calculate commission when marked as Disbursed
+    if ($request->status === 'Disbursed' && $loan->commission_status !== 'paid') {
+        $commissionRate = 0.02; // 2%
+        $loan->commission_amount = $loan->loan_amount * $commissionRate;
+        $loan->commission_status = 'paid';
+        $loan->disbursed_at = now();
+    }
+
+    $loan->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => "Loan status updated to {$request->status}",
+        'data'    => [
+            'loan_code'         => $loan->loan_code,
+            'status'            => $loan->status,
+            'commission_amount' => $loan->commission_amount,
+            'commission_status' => $loan->commission_status,
+        ]
+    ]);
+}
 
     public function store(Request $request): JsonResponse
     {
@@ -164,6 +176,8 @@ class LoanController extends Controller
             'last_repayment_date'     => $request->last_repayment_date,
             'tenure_days'             => $request->tenure_days,
             'status'                  => 'Pending',
+            'commission_amount'       => $request->loan_amount * 0.02,
+            'commission_status'       => 'pending_payout',
         ]);
 
         return response()->json([
@@ -189,14 +203,14 @@ class LoanController extends Controller
 {
     $loan = Loan::findOrFail($id);
 
-    if ($loan->status !== 'approved') {
-        return response()->json(['message' => 'Only approved loans can be disbursed.'], 422);
+    if ($loan->status !== 'Pending') {
+        return response()->json(['message' => 'Only pending loans can be disbursed.'], 422);
     }
 
     $commissionRate = 0.02; // 2% — adjust as needed
     $loan->status = 'disbursed';
     $loan->commission_amount = $loan->loan_amount * $commissionRate;
-    $loan->commission_status = 'unpaid';
+    $loan->commission_status = 'paid';
     $loan->disbursed_at = now();
     $loan->save();
 
