@@ -10,6 +10,15 @@ export default function RetailerDetailsPage() {
   const [error, setError]       = useState('')
 
   useEffect(() => {
+    if (!id) {
+      setError('Retailer ID is missing')
+      setLoading(false)
+      return
+    }
+  
+    setLoading(true)
+    setError('')
+  
     retailerRepository.getById(id)
       .then(setRetailer)
       .catch(e => setError(e.message))

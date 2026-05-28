@@ -1,6 +1,6 @@
 import { authService } from './authService';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://usethecred.com/api';
 
 function getHeaders(extra = {}) {
   const token = authService.getToken();
@@ -36,8 +36,8 @@ export const retailerService = {
     return handleResponse(response);
   },
 
-  async getRetailerByCode(retailerCode) {
-    const response = await fetch(`${API_BASE}/retailers/${retailerCode}`, {
+  async getRetailerById(retailerId) {
+    const response = await fetch(`${API_BASE}/retailers/${retailerId}`, {
       method: 'GET',
       headers: getHeaders(),
     });

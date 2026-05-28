@@ -40,7 +40,7 @@ function App() {
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="retailers" element={<RetailerListPage />} />
         {/* <Route path="retailers/new" element={<AddRetailerPage />} /> */}
-        <Route path="retailers/:retailerId" element={<RetailerDetailsPage />} />
+        <Route path="retailers/:id" element={<RetailerDetailsPage />} />
         {/* <Route path="retailers/:retailerId/edit" element={<EditRetailerPage />} /> */}
         <Route path="loans" element={<LoanListPage />} />
         <Route path="loans/create" element={<LoanCreatePage />} />

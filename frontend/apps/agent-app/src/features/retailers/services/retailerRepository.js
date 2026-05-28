@@ -7,7 +7,11 @@ export const retailerRepository = {
   },
 
   async getById(retailerId) {
-    const response = await retailerService.getRetailerByCode(retailerId)
+    if (!retailerId) {
+      throw new Error('Retailer ID is missing')
+    }
+
+    const response = await retailerService.getRetailerById(retailerId)
     return response.data ?? null
   },
 }
