@@ -7,15 +7,15 @@ export default function CrmDesktopLayout() {
   const location = useLocation();
 
   const menu = [
-    { label: 'Dashboard',          path: '/dashboard',        roles: ['utc_team', 'investor'] },
-    { label: 'Loan Book',          path: '/loans',            roles: ['utc_team'] },
-    { label: 'Retailers',          path: '/retailers',        roles: ['utc_team'] },
+    { label: 'Dashboard',          path: '/dashboard',        roles: ['utc_team', 'investor', 'agent'] },
+    { label: 'Loan Book',          path: '/loans',            roles: ['utc_team', 'agent'] },
+    { label: 'Retailers',          path: '/retailers',        roles: ['utc_team', 'agent'] },
+    { label: 'EMI Book',           path: '/emis',             roles: ['utc_team', 'agent'] },
+    { label: 'Disbursements',      path: '/disbursements',    roles: ['utc_team', 'agent'] },
     { label: 'Agents',             path: '/users',            roles: ['utc_team'] },
-    { label: 'EMI Book',           path: '/emis',             roles: ['utc_team'] },
-    { label: 'Disbursements',      path: '/disbursements',    roles: ['utc_team'] },
     { label: 'Commission Tracker', path: '/crm/commissions',  roles: ['utc_team'] },
     { label: 'Disbursement Panel', path: '/crm/disbursement', roles: ['utc_team'] },
-    { label: 'Investor View', path: '/investor', roles: ['utc_team', 'investor'] },
+    { label: 'Investor View',      path: '/investor',         roles: ['utc_team', 'investor'] },
   ];
 
   return (

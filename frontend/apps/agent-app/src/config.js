@@ -1,4 +1,5 @@
-export const API_CONFIG = {
-    BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api',
-    TIMEOUT: 15000,
-  };
+const config = {
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://usethecred.com/api',
+};
+
+export default config;

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { authService } from '../../../services/authService';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
 function apiFetch(path, options = {}) {
   return fetch(`${API_BASE}${path}`, {

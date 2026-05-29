@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+
 export default function DashboardPage() {
   const { isUtcTeam, user } = useAuth();
   const [stats, setStats]       = useState(null);
@@ -10,7 +12,7 @@ export default function DashboardPage() {
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/dashboard/stats', {
+    fetch(`${API_BASE}/dashboard/stats`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('utc_crm_token')}`,
         'Accept': 'application/json',

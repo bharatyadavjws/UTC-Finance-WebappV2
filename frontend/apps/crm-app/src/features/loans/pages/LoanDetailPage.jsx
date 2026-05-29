@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { loanService } from '../../../services/loanService';
 
 const STATUSES = ['Pending', 'Disbursed', 'Closed'];
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
 export default function LoanDetailPage() {
   const { loanCode } = useParams();
@@ -175,7 +176,7 @@ function GenerateEmiSection({ loanCode }) {
       if (!window.confirm('Generate EMI schedule for this loan?')) return;
       setLoading(true);
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/loans/${loanCode}/generate-emis`, {
+        const res = await fetch(`${API_BASE}/loans/${loanCode}/generate-emis`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('utc_crm_token')}`,

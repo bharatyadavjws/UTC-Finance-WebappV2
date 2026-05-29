@@ -86,7 +86,7 @@ export default function LoanDetailsPage() {
                 </div>
                 <div style={{ height: '80px', background: '#f3f4f6', borderRadius: '8px', overflow: 'hidden' }}>
                   {loan[field] ? (
-                    <img src={`http://127.0.0.1:8000/storage/${loan[field]}`} alt={field} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={`https://usethecred.com/storage/${loan[field]}`} alt={field} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <span style={{ fontSize: '10px', color: '#9ca3af', lineHeight: '80px', display: 'block' }}>N/A</span>
                   )}
