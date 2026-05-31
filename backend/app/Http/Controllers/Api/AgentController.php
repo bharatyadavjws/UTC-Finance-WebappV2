@@ -24,7 +24,9 @@ class AgentController extends Controller
                     'name'            => $agent->name,
                     'email'           => $agent->email,
                     'role'            => $agent->role,
-                    'total_retailers' => Retailer::where('agent_id', $agent->id)->count(),
+                    'total_retailers' => Retailer::whereHas('agents', function ($query) use ($agent) {
+                        $query->where('users.id', $agent->id);
+                    })->count(),
                     'total_loans'     => Loan::where('agent_id', $agent->id)->count(),
                     'disbursed_loans' => Loan::where('agent_id', $agent->id)->where('status', 'Disbursed')->count(),
                     'pending_loans'   => Loan::where('agent_id', $agent->id)->where('status', 'Pending')->count(),
@@ -69,7 +71,9 @@ class AgentController extends Controller
             return response()->json(['success' => false, 'message' => 'User is not an agent'], 404);
         }
 
-        $retailers = Retailer::where('agent_id', $user->id)
+        $retailers = Retailer::whereHas('agents', function ($query) use ($user) {
+                $query->where('users.id', $user->id);
+            })
             ->get(['retailer_code', 'shop_name', 'owner_name', 'mobile', 'city', 'status']);
 
         $recentLoans = Loan::where('agent_id', $user->id)

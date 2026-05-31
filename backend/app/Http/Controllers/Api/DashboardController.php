@@ -14,25 +14,30 @@ class DashboardController extends Controller
     public function getStats(Request $request): JsonResponse
     {
         $user = $request->user();
-        $isUtcTeam = $user->role === 'utc_team';
+        $isUtcTeam = in_array($user->role, ['utc_team', 'admin']);
 
-        // UTC Team sees ALL data globally, agents see only their own
-        $loansQuery    = $isUtcTeam ? Loan::query()     : Loan::where('agent_id', $user->id);
-        $retailerQuery = $isUtcTeam ? Retailer::query() : Retailer::where('agent_id', $user->id);
+        $loansQuery = $isUtcTeam
+            ? Loan::query()
+            : Loan::where('agent_id', $user->id);
+
+        $retailerQuery = $isUtcTeam
+            ? Retailer::query()
+            : Retailer::whereHas('agents', function ($query) use ($user) {
+                $query->where('users.id', $user->id);
+            });
 
         $loans = $loansQuery->get();
 
         $stats = [
-            'total_retailers' => $retailerQuery->count(),
-            'total_loans'     => $loans->count(),
+            'total_retailers'  => $retailerQuery->count(),
+            'total_loans'      => $loans->count(),
             'pending_loans'    => $loans->where('status', 'Pending')->count(),
             'disbursed_loans'  => $loans->where('status', 'Disbursed')->count(),
             'closed_loans'     => $loans->where('status', 'Closed')->count(),
         ];
 
-        // UTC Team gets extra global stats
         if ($isUtcTeam) {
-            $stats['total_agents'] = User::where('role', 'agent')->count();
+            $stats['total_agents'] = User::whereIn('role', ['agent', 'super_agent'])->count();
         }
 
         $recentLoans = (clone $loansQuery)
@@ -43,7 +48,7 @@ class DashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'stats'        => $stats,
+                'stats' => $stats,
                 'recent_loans' => $recentLoans,
             ]
         ]);
